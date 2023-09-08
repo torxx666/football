@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from pymongo.database import Database
+from fastapi.responses import JSONResponse
 import database
 
 from users.users_manager import UsersManager
@@ -7,12 +8,11 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Bienvenue sur l'API de documentation"}
+    return {"message": "Welcome"}
         
 @app.get("/get_users")
-async def get_users(skip: int = 0, limit: int = 10):
-
+def get_users(user_ids:str="", skip: int = 0, limit: int = 10):
     user_mgr = UsersManager(database.db)
-    return user_mgr.get_user_list(skip, limit)
-    # return {"category": "ok", "documents": []}
+    return JSONResponse(content=user_mgr.get_user_list(user_ids, skip, limit))
+
 
